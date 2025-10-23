@@ -4,12 +4,13 @@
 Integrantes: 
 - Josué Salazar
 - Javier Rodríguezz
-- Jose David Chavez 
+- Jose David Chavez
+
 Curso: Diseño de Software
 
 ---
 
-## Métricas de los requerimientos no funcionales
+# Métricas de los requerimientos no funcionales
 
 ### Performance
 Justificación metodológica: Las métricas de performance se calculan basándose en estándares de la industria para aplicaciones web empresariales y sistemas de mercadeo digital que requieren respuestas rápidas para mantener la productividad de los usuarios.​
@@ -267,5 +268,306 @@ Si cada componente tiene 99.9% disponibilidad:
 - Múltiples versiones soportadas simultáneamente
 - Deprecation policy: 6 meses de notice antes de remover versión
 
-## Domain driven desing (En eso estoy ahorita xd)
+# Domain driven desing
+
+## Identificación de Dominios Principales
+
+### **Dominios Globales (Compartidos)**:
+1. **Identity & Access Management (IAM)**
+    - Autenticación de usuarios
+    - Autorización y permisos
+    - Gestión de roles
+    - Audit logs de seguridad
+    - **Entidades**: User, Role, Permission, Session, AuditLog
+        
+2. **Billing & Subscriptions**    
+    - Gestión de planes y tiers
+    - Facturación y pagos 
+    - Tracking de uso 
+    - **Entidades**: Subscription, Plan, Invoice, Payment, UsageMetric        
+3. **Notifications**
+    - Email, SMS, push notifications
+    - Alertas del sistema
+    - **Entidades**: Notification, NotificationTemplate, NotificationLog
+        
+4. **Analytics & Reporting**
+    - Dashboards centralizados
+    - Métricas consolidadas de las 3 subempresas
+    - Data warehouse
+    - **Entidades**: Report, Dashboard, Metric, DataPipeline
+
+### **Bounded Context: PromptContent** [Link](https://semaphore.io/blog/domain-driven-design-microservices)
+
+**Subdominio Core**:
+- **Content Generation**: Creación automática de contenido con IA
+- **Content Management**: Versionado, aprobaciones, derechos de uso
+
+**Entidades y Agregados**:
+- **Content Aggregate Root**: Content
+    - ContentId (Value Object)
+    - ContentType (enum: text, image, video)
+    - Status (enum: draft, review, approved, published)
+    - Versions (Collection)
+    - ApprovalWorkflow
+    - AIGenerationMetadata
+        
+- **Campaign Content** (Entity)
+- **Content Template** (Entity)
+- **Media Asset** (Entity con storage reference)
+- **AI Prompt** (Value Object)
+
+**Domain Services**:
+- `ContentGenerationService`: Integración con OpenAI API, Adobe, Canva
+- `ContentApprovalService`: Workflow de aprobación
+- `ContentVersioningService`: Control de versiones
+
+**Integraciones Externas**:
+- OpenAI API, Anthropic API
+- Canva API, Adobe Creative Cloud API
+- Meta Business Suite
+- Storage (S3, Azure Blob Storage)
+
+### **Bounded Context: PromptAds** [Link](https://learn.microsoft.com/en-us/azure/architecture/microservices/model/domain-analysis)
+
+**Subdominio Core**:
+- **Campaign Management**: Diseño, segmentación y ejecución de campañas
+- **Ad Performance**: Análisis en tiempo real
+
+**Entidades y Agregados**:
+- **Campaign Aggregate Root**: Campaign
+    - CampaignId (Value Object)
+    - TargetAudience (Value Object)
+    - Budget (Value Object: amount, currency, spend)
+    - Schedule (Value Object: start, end, timezone)
+    - Channels (Collection: Google Ads, Meta, TikTok, Email)
+    - PerformanceMetrics (Value Object)
+        
+- **Ad Creative** (Entity)
+- **Audience Segment** (Entity)
+- **Budget Allocation** (Entity)
+- **Performance Report** (Entity)
+
+**Domain Services**:
+- `CampaignExecutionService`: Publicación en plataformas
+- `AudienceTargetingService`: Segmentación con IA
+- `BudgetOptimizationService`: Ajuste automático de presupuesto
+- `PerformanceAnalyticsService`: Análisis en tiempo real
+
+**Integraciones Externas**:
+- Google Ads API
+- Meta Ads API
+- TikTok for Business API
+- Mailchimp API
+- LinkedIn Campaign Manager API
+
+### **Bounded Context: PromptCrm** [Link](https://semaphore.io/blog/domain-driven-design-microservices)
+
+**Subdominio Core**:
+- **Lead Management**: Captura, clasificación y seguimiento
+- **Customer Engagement**: Chatbots, voicebots, automation
+
+**Entidades y Agregados**:
+- **Lead Aggregate Root**: Lead
+    - LeadId (Value Object)
+    - ContactInfo (Value Object)
+    - Source (enum: website, social, referral)
+    - Score (Value Object: calculado con IA)
+    - Status (enum: new, qualified, nurturing, converted)
+    - InteractionHistory (Collection)
+    - PurchaseIntent (Value Object)
+
+- **Customer** (Entity)
+- **Interaction** (Entity: email, call, chat, meeting)
+- **Deal** (Entity)
+- **Conversation** (Entity: chatbot/voicebot)
+
+**Domain Services**:
+- `LeadScoringService`: Predicción de intención con IA
+- `ConversationService`: Chatbot/voicebot automation
+- `LeadNurturingService`: Flujos automatizados
+- `IntegrationSyncService`: Sincronización con CRMs externos
+
+**Integraciones Externas**:
+- HubSpot API
+- Salesforce API
+- Zendesk API
+- WhatsApp Business API
+- Twilio API (SMS, Voice)
+
+### **Bounded Context: PromptSales (Portal Unificado)** [Link](https://learn.microsoft.com/en-us/azure/architecture/microservices/model/domain-analysis)
+**Subdominio Core**:
+- **Strategy Design**: Diseño de estrategias de mercadeo multicanal
+- **Orchestration**: Coordinación entre las 3 subempresas
+- **Consolidated Analytics**: Reportería unificada
+
+**Entidades y Agregados**:
+- **Marketing Strategy Aggregate Root**: MarketingStrategy
+    - StrategyId (Value Object)
+    - Client (Value Object)
+    - Objectives (Collection)
+    - Timeline (Value Object)
+    - Budget (Value Object)
+    - ContentPlan (referencia a PromptContent)
+    - CampaignPlan (referencia a PromptAds)
+    - LeadFlows (referencia a PromptCrm)
+    - ApprovalStatus
+        
+- **Client** (Entity)
+- **Objective** (Value Object: KPI, target, deadline)
+- **Task Schedule** (Entity: agenda inteligente)
+- **Consolidated Report** (Entity)
+
+**Domain Services**:
+- `StrategyOrchestrationService`: Coordinación entre bounded contexts
+- `AIRecommendationService`: Sugerencias automáticas
+- `ConsolidatedAnalyticsService`: Agregación de métricas
+- `ApprovalWorkflowService`: Revisión y aprobación
+
+---
+## Contratos entre Dominios mediante Interfaces
+
+### **Patrón: Domain Model Facade as API** [Link](https://eprints.cs.univie.ac.at/6948)
+
+​**1. Facade: ContentServiceFacade**
+
+typescript
+```
+// Interface pública para PromptSales → PromptContent
+interface ContentServiceFacade {   
+	generateContent(request: ContentGenerationRequest): Promise<ContentResponse>;
+	getContentById(contentId: string): Promise<ContentDTO>;
+	approveContent(contentId: string, approver: string): Promise<void>;
+	listContentByCampaign(campaignId: string): Promise<ContentDTO[]>;
+} 
+
+// Value Objects (Anti-Corruption Layer) 
+interface ContentGenerationRequest {   
+	campaignId: string;   
+	contentType: 'text' | 'image' | 'video';   
+	audience: AudienceProfile;   prompt: string;   
+	constraints?: ContentConstraints; 
+} 
+
+interface ContentDTO {
+	id: string;   
+	type: string;   
+	status: string;   
+	url?: string;   
+	metadata: Record<string, any>;   
+	createdAt: Date; 
+}
+```
+
+**2. Facade: CampaignServiceFacade**
+
+typescript
+```
+// Interface pública para PromptSales → PromptAds 
+
+interface CampaignServiceFacade {   
+	createCampaign(request: CampaignCreationRequest): Promise<CampaignDTO>;
+	executeCampaign(campaignId: string): Promise<ExecutionResult>;   
+	getPerformanceMetrics(campaignId: string): Promise<PerformanceDTO>;   
+	pauseCampaign(campaignId: string): Promise<void>;
+} 
+
+interface CampaignCreationRequest {   
+	strategyId: string;   
+	budget: BudgetAllocation;   
+	audience: AudienceSegment;   
+	schedule: ScheduleConfig;   
+	channels: Channel[]; 
+} 
+
+interface PerformanceDTO {   
+	campaignId: string;   
+	impressions: number;   
+	clicks: number;   
+	conversions: number;   
+	spend: number;   
+	roi: number;   
+	updatedAt: Date; 
+}
+```
+
+**3. Facade: LeadServiceFacade**
+
+typescript
+```
+// Interface pública para PromptSales → PromptCrm 
+
+interface LeadServiceFacade {   
+	createLead(source: string, data: LeadData): Promise<LeadDTO>;   
+	scoreLeads(leads: string[]): Promise<ScoredLeadDTO[]>;   
+	getLeadsByStrategy(strategyId: string): Promise<LeadDTO[]>;   
+	startAutomatedNurturing(leadId: string, flow: string): Promise<void>; 
+} 
+
+interface LeadDTO {   
+	id: string;   
+	contactInfo: ContactInfo;   
+	score: number;   
+	status: string;
+	source: string;   
+	lastInteraction?: Date; 
+} 
+
+interface ScoredLeadDTO extends LeadDTO {   
+	purchaseIntent: number; // 0-100   
+	nextBestAction: string;   
+	predictedConversionDate?: Date;
+}
+```
+
+**4. API REST Contracts (OpenAPI)** [Link](https://www.microservice-api-patterns.org/ZIO-FromDDDToMAPIsQS2020v10p.pdf)
+
+​Todos los facades se exponen también como APIs REST siguiendo el patrón **Aggregate Roots as API Endpoints**:[Link](https://eprints.cs.univie.ac.at/6948)
+
+text
+```
+# OpenAPI 3.0 Contract Example 
+/api/v1/content:   
+	post:    
+		summary: Generate content    
+		operationId: generateContent    
+		security:      
+			- OAuth2: [content:write]    
+			requestBody:      
+				$ref: '#/components/schemas/ContentGenerationRequest'   
+			responses:      
+				201:        
+					$ref: '#/components/schemas/ContentResponse'      
+				400:        
+					$ref: '#/components/schemas/ValidationError'
+```
+
+## Diagrama de Dominios
+
+<img width="811" height="791" alt="image" src="https://github.com/user-attachments/assets/fbf91f9e-3677-41ce-b5b9-0521937dfd4e" />
+
+El sistema se estructura en capas con los siguientes bounded contexts:[link](https://martinfowler.com/bliki/BoundedContext.html)
+
+**Relaciones entre Bounded Contexts**:[Link](https://www.infoq.com/articles/ddd-contextmapping/)
+
+1. **PromptSales → PromptContent**: Customer/Supplier (Open Host Service)
+2. **PromptSales → PromptAds**: Customer/Supplier (Open Host Service)
+3. **PromptSales → PromptCrm**: Customer/Supplier (Open Host Service)
+4. **Todos → Shared Kernel**: Shared (IAM, Billing, Notifications)
+5. **Todos → External Systems**: Anti-Corruption Layer (ACL)
+## Independencia entre Dominios
+
+**Principios de Independencia**:[](https://blog.bitsrc.io/developing-a-ddd-oriented-microservices-1b65bd45e2a8)
+
+1. **Desacoplamiento de Datos**: Cada bounded context tiene su propia base de datos
+2. **Comunicación Asíncrona**: Event-driven con NATS/Kafka para operaciones no críticas
+3. **Comunicación Síncrona**: REST APIs con circuit breakers (Resilience4j) para operaciones críticas
+4. **Versionado**: Cada API mantiene versiones independientes
+5. **Deployment**: Cada bounded context se despliega independientemente en Kubernetes
+
+**Pruebas por Dominio**:[Link](https://blog.bitsrc.io/developing-a-ddd-oriented-microservices-1b65bd45e2a8)
+
+1. **Unit Tests**: Lógica de dominio pura (sin dependencias externas)
+2. **Integration Tests**: Facades y repositories con bases de datos de test
+3. **Contract Tests**: Validación de contratos entre bounded contexts (Pact)
+4. **E2E Tests**: Flujos completos que cruzan múltiples dominios
 
