@@ -13,15 +13,6 @@ Curso: Diseño de Software
 # Métricas de los requerimientos no funcionales
 
 ### Performance
-Justificación metodológica: Las métricas de performance se calculan basándose en estándares de la industria para aplicaciones web empresariales y sistemas de mercadeo digital que requieren respuestas rápidas para mantener la productividad de los usuarios.​
-#### **Portal Web - Tiempo de Respuesta**
-
-- **Tiempo promedio para operaciones estándar**: ≤ 2.0 segundos (target), máximo 2.5 segundos (requerimiento)[Link](https://kpidepot.com/kpi/query-response-time)​
-- **Percentil 95**: ≤ 2.4 segundos
-- **Percentil 99**: ≤ 3.0 segundos
-- **Tecnología**: Next.js en Vercel con edge functions, PostgreSQL con índices optimizados
-- **Métrica de validación**: Usar Lighthouse CI y herramientas de Real User Monitoring (RUM)
-- **Justificación**: Los estudios indican que respuestas bajo 2 segundos son percibidas como instantáneas, mientras que sobre 3 segundos incrementan significativamente el abandono del usuario[Link](https://odown.com/blog/api-response-time-standards/)  
 
 #### **Redis Cache - Consultas Cacheadas**
 - **Tiempo de respuesta target**: ≤ 300 milisegundos
@@ -30,13 +21,6 @@ Justificación metodológica: Las métricas de performance se calculan basándos
 - **Latencia sub-millisecond**: Para operaciones en memoria caliente
 - **Tecnología**: Redis Cloud con clustering, configuración de persistent connections
 - **Justificación**: Benchmarks de Redis demuestran latencias sub-milisegundo para operaciones en memoria. El objetivo de 300ms incluye overhead de red y serialización[Link](https://redis.io/blog/redisjson-public-preview-performance-benchmarking/)
-
-#### **Generación de Contenido con IA**
-- **Solicitudes simples**: ≤ 7 segundos (generación de textos cortos, sugerencias)
-- **Solicitudes complejas**: ≤ 20 segundos (campañas completas, análisis profundo)
-- **Timeout threshold**: 30 segundos
-- **Tecnología**: OpenAI API con streaming, Azure OpenAI Service, caching agresivo de prompts similares
-- **Justificación**: Las llamadas a APIs de LLM varían entre 3-15 segundos dependiendo de la longitud del token y complejidad del modelo
 
 #### **Cálculo de Throughput**
 - **Peak hours (7am-7pm)**: 100,000 operaciones/minuto = **1,666.67 ops/segundo**
