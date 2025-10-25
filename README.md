@@ -185,7 +185,35 @@ Si cada componente tiene 99.9% disponibilidad:
 - **Compliance**: GDPR, CCPA
 
 ### Maintainability
-**Modularidad y Separación de Dominios**
+
+#### Durante el desarrollo
+
+**Sistema para la gestión del código**
+
+**GitFlow:** Implementamos GitFlow con ramas principales `main` (producción) y `develop` (integración). Para mas infromacion en [GitFlow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow) 
+
+- **Branching strategy:**
+	1. `main` → Producto terminado y funcionando 
+	2. `develop`→ Donde se arma el próximo producto
+	3. `feature/*` → Branches de trabajo para nuevas funcionalidades
+	4. `release/*` → Control de calidad antes de enviar a producción/main
+	5. `hotfix/*` → Reparaciones urgentes del sistema en uso
+
+**Pull Requests:** Requeridos para todo merge a `develop` o `main`, con revisión de al menos otro desarrollador (NO el que realizo el codigo) para `develop` y de los otros miembros del equipo para el `main`
+
+**Sistema de Tickets**
+
+Seguimiento de issues con templates estandarizados. Etiquetado por tipo (bug, feature, improvement) y prioridad. **Herramientas:** Trello y GitHub Issues
+
+#### Soporte post desarrollo
+
+Niveles de Soporte
+- **L1:** Manuales de usuario y videos tutoriales para problemas comunes
+- **L2:** Soporte por email con tiempo máximo de respuesta de 48 horas
+- **L3:** Sistema de ticketing para issues técnicos con escalamiento al equipo de desarrollo
+
+#### Arquitectura de Mantenibilidad
+
 - **Arquitectura**: Domain-Driven Design con bounded contexts claramente definidos[Link](https://learn.microsoft.com/en-us/azure/architecture/microservices/model/domain-analysis)
 - **Microservicios**: Cada bounded context implementado como microservicio independiente
 - **Código**: Clean Architecture con separación de layers (domain, application, infrastructure, presentation)
@@ -200,51 +228,64 @@ Si cada componente tiene 99.9% disponibilidad:
 - **Mínimo**: 80% code coverage
 - **Unit tests**: Para lógica de dominio
 - **Integration tests**: Para APIs y bases de datos
-- **E2E tests**: Para flujos críticos de usuario
 
 ### Interoperability
-**APIs REST**
-- **Estándar**: REST Level 3 (HATEOAS cuando sea apropiado) 
-- **Formato**: JSON para request/response
-- **Versionado**: URL-based (e.g., `/api/v1/campaigns`)
-- **Rate limiting**: 1000 requests/minuto por API key
 
-**MCP Servers**
-- **Protocolo**: Model Context Protocol para comunicación entre IA y sistemas​
-- **Uso**: Integración entre PromptContent, PromptAds y PromptCrm
-- **Seguridad**: mTLS para autenticación entre servidores
+#### APIs REST
 
-**Integraciones Externas**
-- **Google Ads API**, **Meta Ads API**, **TikTok for Business**
-- **HubSpot**, **Salesforce**, **Zendesk**
-- **OpenAI API**, **Anthropic API**
-- **Patrón**: API Gateway para centralizar y monitorear integraciones
+Se va a implementar APIs REST con JSON como formato estándar. Versionado mediante el fromato (`/api/v<Numero de version>/`)
+
+Documentación OpenAPI 3.0 para todos los endpoints
+
+#### MCP Servers
+
+Utilizamos Model Context Protocol para comunicación entre sistemas IA. Facilita integración entre módulos (PromptContent, PromptAds, PromptCrm)
+
+#### Integraciones Externas
+
+- APIs de plataformas de ads (Google Ads, Meta Ads, TikTok for Business)
+- CRMs (Customer relationship management)(HubSpot, Salesforce, Zendesk)
+- APIs de IA (OpenAI, Anthropic)
+- Centralizadas mediante API Gateway para monitoreo y gestión
 
 ### Compliance
-**GDPR (General Data Protection Regulation)**
-- Right to access, rectification, erasure (right to be forgotten)
-- Data portability
-- Consent management
-- Data breach notification (72 horas)
 
-**CCPA (California Consumer Privacy Act)**
-- Consumer rights to know, delete, opt-out
-- Non-discrimination for exercising rights
+#### Procesamiento de Pagos y Transacciones
 
-**Implementación**
-- Data retention policies automatizadas
-- Anonymization de datos en ambientes no productivos
-- Privacy by design en desarrollo
-- 
+Todas las transacciones financieras se realizan mediante servicios terceros. Ejemplos de servicios: Stripe, PayPal, Plaid para procesamiento de pagos.
+
+**Nota:** No se busca almacenar datos sensibles de tarjetas de crédito o información bancaria
+
+#### Estándares de Seguridad
+
+**OWASP Web Security:** Cumplimiento completo de estándares OWASP para aplicaciones web. Siguiendo el testing oficial de [Web Application Security Testing](https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/)
+
+**OWASP Backend Security:** Implementación de mejores prácticas OWASP para backend
+
+**Política de Vulnerabilidades:**
+- 0 vulnerabilidades críticas permitidas
+- Máximo 40 warnings en escaneos de seguridad
+(Entre ambos, web y backend)
+
+#### Protección de Datos
+
+Cumplimiento GDPR (Protección de Datos Europeo): derechos de acceso, rectificación, eliminación y portabilidad
+Cumplimiento CCPA (Protección de Datos California): derechos de conocimiento, eliminación y opt-out (que NO se puedan vender los datos)
+Políticas automatizadas de retención de datos
+Anonimización de datos
+
 ### Extensibility
-**Arquitectura Modular**
-- **Plugin architecture**: Para agregar nuevos canales de marketing
-- **Event-driven**: Pub/Sub con NATS o Kafka para desacoplar componentes
-- **Bounded contexts independientes**: Pueden evolucionar sin afectar otros dominios
 
-**Versionado de APIs**
-- Múltiples versiones soportadas simultáneamente
-- Deprecation policy: 6 meses de notice antes de remover versión
+#### Sistemas de Extensión
+
+- **REST API:** Permite integración con sistemas externos y desarrollo de extensiones
+- **MCP Servers:** Protocolo para conectar nuevos servicios y capacidades de IA
+- **Agregación de Dominios:** Posibilidad de incorporar nuevos bounded contexts al sistema
+
+#### Arquitectura Extensible
+
+- **Arquitectura Modular:** Microservicios independientes que pueden evolucionar separadamente
+- **Versionado de APIs:** Soporte simultáneo de múltiples versiones
 
 # Domain driven desing
 
