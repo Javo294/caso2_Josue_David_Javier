@@ -164,31 +164,25 @@ Si cada componente tiene 99.9% disponibilidad:
 
 ### Security
 **Autenticación y Autorización**
-- **OAuth 2.0**: Para autenticación de usuarios y aplicaciones
-- **OpenID Connect (OIDC)**: Para single sign-on (SSO)
-- **JWT**: Tokens con expiración de 15 minutos, refresh tokens de 7 días
-- **Tecnología**: Auth0, Azure AD B2C, o Keycloak
+- Para la autenticación de los usuarios usamos OpenID Connect (OIDC). 
+- Para los servicios utilizamos OAuth2 Client Credentials.
+- Auth0 se encarga de documentar el flujo de los servicios y de validarlos por JWKS (RS256)
+- Tecnologías usadas: Auth0
 
-**Cifrado en Tránsito**
-- **TLS 1.3**: Todas las comunicaciones entre servicios​
-- **mTLS**: Para comunicación entre microservicios en Kubernetes
-- **Certificate rotation**: Automática cada 90 días usando cert-manager
+**Bases de datos**
+-PostgreSQL
+-MariaDB
+-MongoDB
 
-**Cifrado en Reposo**
-- **AES-256**: Para datos en bases de datos y almacenamiento    
-- **Transparent Data Encryption (TDE)**: En PostgreSQL
-- **Encrypted EBS volumes**: En AWS
+**Cifrado**
+- **En transito**: Utilizamos TLS 1.3 para todas las comunicaciones entre servicios​
+- **Para las bases de datos y almacenamiento**: Utilizamos AES-256 con la excepción de PostgreSQL     
+- **En PostgreSQL**: Transparent Data Encryption (TDE)
 
 **Auditoría y Logging**
 - **Retención**: 90 días mínimo​
-- **Stack**: ELK (Elasticsearch, Logstash, Kibana) o Datadog
-- **SIEM**: Para detección de amenazas
+- **Stack**: ELK (Elasticsearch, Logstash, Kibana)
 - **Compliance**: GDPR, CCPA
-
-**Políticas de Acceso**
-- **Principle of Least Privilege**: Roles y permisos granulares
-- **RBAC en Kubernetes**: Role-Based Access Control
-- **Network Policies**: Segmentación de red en K8s
 
 ### Maintainability
 **Modularidad y Separación de Dominios**
