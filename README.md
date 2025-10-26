@@ -13,18 +13,21 @@ Curso: Diseño de Software
 # Métricas de los requerimientos no funcionales
 
 ### Performance
+- Redis + Postgresql + Python
 
-#### **Redis Cache - Consultas Cacheadas**
-- **Tiempo de respuesta target**: ≤ 300 milisegundos
-- **Tiempo de respuesta máximo**: 400 milisegundos (requerimiento original)
-- **Operaciones simples (GET)**: ≤ 100 milisegundos
-- **Latencia sub-millisecond**: Para operaciones en memoria caliente
-- **Tecnología**: Redis Cloud con clustering, configuración de persistent connections
+#### Redis
+[Benchmark de Redis](https://redis.io/docs/latest/operate/oss_and_stack/management/optimization/benchmarks/)
+<img width="764" height="233" alt="image" src="https://github.com/user-attachments/assets/118526ba-9f70-429b-b9e4-326a337cc8c2" />
 
-#### **Cálculo de Throughput**
-- **Peak hours (7am-7pm)**: 100,000 operaciones/minuto = **1,666.67 ops/segundo**
-- **Off-peak**: 300 procesos background/minuto = **5 ops/segundo**
-- **Transacciones diarias estimadas**: 72,000,000 durante 12 horas pico
+Tiempo máximo para resultados cacheados: 500ms
+
+(Pendiente calculo propio siguiendo la guía del link)
+
+#### Postgresql
+[Benchmark de Postgresql](https://www.tigerdata.com/blog/benchmarking-postgresql-batch-ingest#the-results)
+<img width="844" height="688" alt="image" src="https://github.com/user-attachments/assets/153af99c-af00-4928-bc94-e734c4ece141" />
+
+(Pendiente calculo propio siguiendo la guia del link)
 
 ### Scalability
 **Autoescalado Horizontal con Kubernetes HPA**
@@ -37,15 +40,13 @@ targetCPUUtilizationPercentage: 70
 targetMemoryUtilizationPercentage: 80
 ```
 
-**Fórmula de escalado**: `desiredReplicas = ceil[currentReplicas × (currentMetric / targetMetric)]`
-
-​**Ejemplo de cálculo**: Con 3 replicas iniciales y CPU al 85% durante pico de carga:
-- Replicas deseadas = ceil[3 × (85/70)] = ceil[3.64] = **4 replicas**
+**Fórmula de escalado**: 
+Usando escalado automático horizontal (HPA), se establece que si el uso del CPU supera el 70%, el HPA crea más pods hasta un máximo de 30, siendo inferior al 70% disminuye los pods hasta un mínimo de 3
 
 **Capacidades del sistema**:
 - **Carga base**: 500 campañas activas, 30 usuarios concurrentes
-- **Carga máxima**: 5,000 campañas activas, 300 usuarios concurrentes (incremento 10x)
-- **Throughput pico**: 1,666.67 operaciones/segundo
+- **Carga máxima**: 5,000 campañas activas, 300 usuarios concurrentes (debe soportar un incremento x10)
+- **Throughput pico**: 1,500 operaciones/segundo
 - **Procesos background**: 5 operaciones/segundo fuera de horario
 
 **Configuración K8s por microservicio**:
@@ -78,15 +79,11 @@ resources:
 				  periodSeconds: 30`
 ```
 
-**Justificación**: La configuración de scale-down conservadora (10% por minuto) previene el "thrashing", mientras que el scale-up agresivo (50% por 30 segundos) responde rápidamente a picos de demanda.
-
 ### Reliability
-**Justificación metodológica**: La tasa de errores se establece basándose en estándares de confiabilidad para sistemas transaccionales empresariales.
-
 **Tasa de Errores Máxima Permitida**: 0.1% de transacciones por día
-- **Transacciones diarias estimadas**: 72,000,000
-- **Errores máximos permitidos**: 72,000 errores/día
-- **Errores por hora (peak)**: 6,000 errores/hora
+- **Transacciones diarias estimadas**: 64,800,000 (Sea un promedio de 50% de las transacciones por segundo en hora pico al día, son (1500/2)x86400)
+- **Errores máximos permitidos**: 64,800 errores/día
+- **Errores por hora (peak)**: 5,000 errores/hora
 
 **Monitoreo y Alertas**:
 - **Tecnología**: Prometheus + Grafana + AlertManager
@@ -118,7 +115,7 @@ resources:
 **Configuración de Alta Disponibilidad**:
 
 **1. Load Balancing**
-- **Tecnología**: AWS Application Load Balancer (ALB) o Azure Load Balancer
+- **Tecnología**: AWS Application Load Balancer (ALB) 
 - **Configuración**:
     - Health checks cada 10 segundos
     - Unhealthy threshold: 3 fallos consecutivos
@@ -340,7 +337,7 @@ Anonimización de datos
 - OpenAI API, Anthropic API
 - Canva API, Adobe Creative Cloud API
 - Meta Business Suite
-- Storage (S3, Azure Blob Storage)
+- Storage (AWS)
 
 ### **Bounded Context: PromptAds** 
 
