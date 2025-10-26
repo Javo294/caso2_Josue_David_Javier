@@ -20,7 +20,6 @@ Curso: Diseño de Software
 - **Operaciones simples (GET)**: ≤ 100 milisegundos
 - **Latencia sub-millisecond**: Para operaciones en memoria caliente
 - **Tecnología**: Redis Cloud con clustering, configuración de persistent connections
-- **Justificación**: Benchmarks de Redis demuestran latencias sub-milisegundo para operaciones en memoria. El objetivo de 300ms incluye overhead de red y serialización[Link](https://redis.io/blog/redisjson-public-preview-performance-benchmarking/)
 
 #### **Cálculo de Throughput**
 - **Peak hours (7am-7pm)**: 100,000 operaciones/minuto = **1,666.67 ops/segundo**
@@ -28,8 +27,6 @@ Curso: Diseño de Software
 - **Transacciones diarias estimadas**: 72,000,000 durante 12 horas pico
 
 ### Scalability
-**Justificación metodológica**: Se aplica la fórmula de Kubernetes HPA para calcular el autoescalado basado en métricas de CPU y memoria, garantizando que el sistema soporte incrementos de 10x en la carga.[](https://cloud.google.com/kubernetes-engine/docs/concepts/horizontalpodautoscaler)
-
 **Autoescalado Horizontal con Kubernetes HPA**
 
 ```
@@ -40,7 +37,7 @@ targetCPUUtilizationPercentage: 70
 targetMemoryUtilizationPercentage: 80
 ```
 
-**Fórmula de escalado**: `desiredReplicas = ceil[currentReplicas × (currentMetric / targetMetric)]`[Link](https://www.devzero.io/blog/kubernetes-hpa)
+**Fórmula de escalado**: `desiredReplicas = ceil[currentReplicas × (currentMetric / targetMetric)]`
 
 ​**Ejemplo de cálculo**: Con 3 replicas iniciales y CPU al 85% durante pico de carga:
 - Replicas deseadas = ceil[3 × (85/70)] = ceil[3.64] = **4 replicas**
@@ -81,7 +78,7 @@ resources:
 				  periodSeconds: 30`
 ```
 
-**Justificación**: La configuración de scale-down conservadora (10% por minuto) previene el "thrashing", mientras que el scale-up agresivo (50% por 30 segundos) responde rápidamente a picos de demanda.[Link](https://cloud.google.com/kubernetes-engine/docs/concepts/horizontalpodautoscaler)
+**Justificación**: La configuración de scale-down conservadora (10% por minuto) previene el "thrashing", mientras que el scale-up agresivo (50% por 30 segundos) responde rápidamente a picos de demanda.
 
 ### Reliability
 **Justificación metodológica**: La tasa de errores se establece basándose en estándares de confiabilidad para sistemas transaccionales empresariales.
@@ -109,11 +106,10 @@ resources:
 - Email digest para métricas diarias
 
 ### Availability
-**Justificación metodológica**: El cálculo de disponibilidad se basa en la fórmula estándar: `Availability% = (Uptime / Total Time) × 100`[](https://sderay.com/designing-highly-available-system-achieving-99-999-uptime/)
-
+**Justificación metodológica**: El cálculo de disponibilidad se basa en la fórmula estándar: `Availability% = (Uptime / Total Time) × 100`
 **Disponibilidad Mínima**: 99.9% mensual
 
-**Downtime permitido**:[Link](https://dev.to/raza_shaikh_eb0dd7d1ca772/kubernetes-high-availability-strategies-for-resilient-production-grade-infrastructure-37fb)
+**Downtime permitido**:
 - **Por año**: 525.60 minutos (8.76 horas)
 - **Por mes**: 43.20 minutos
 - **Por semana**: 10.08 minutos
@@ -132,7 +128,7 @@ resources:
 **2. Failover Automático**
 - **Tiempo de detección de falla**: 30 segundos
 - **Tiempo de switchover**: 20 segundos
-- **Tiempo total de failover**: 50 segundos[Link](https://dev.to/raza_shaikh_eb0dd7d1ca772/kubernetes-high-availability-strategies-for-resilient-production-grade-infrastructure-37fb)    
+- **Tiempo total de failover**: 50 segundos 
 - **Failovers permitidos por mes**: 52 (sin exceder downtime mensual)
 
 **3. Replicación de Bases de Datos**
@@ -156,7 +152,7 @@ affinity:
 			topologyKey: topology.kubernetes.io/zone
 ```
 
-**Cálculo de disponibilidad en serie** (componentes dependientes):[Link](https://mollysheets.com/2025/03/12/calculating-uptime-for-a-platform-in-k8snaas-and-k8scaas-business-models/)
+**Cálculo de disponibilidad en serie** (componentes dependientes):
 
 Si cada componente tiene 99.9% disponibilidad:
 - Sistema con 3 componentes en serie: 0.999³ = 0.997 = **99.7%**
@@ -214,7 +210,7 @@ Niveles de Soporte
 
 #### Arquitectura de Mantenibilidad
 
-- **Arquitectura**: Domain-Driven Design con bounded contexts claramente definidos[Link](https://learn.microsoft.com/en-us/azure/architecture/microservices/model/domain-analysis)
+- **Arquitectura**: Domain-Driven Design con bounded contexts claramente definidos
 - **Microservicios**: Cada bounded context implementado como microservicio independiente
 - **Código**: Clean Architecture con separación de layers (domain, application, infrastructure, presentation)
 
@@ -315,7 +311,7 @@ Anonimización de datos
     - Data warehouse
     - **Entidades**: Report, Dashboard, Metric, DataPipeline
 
-### **Bounded Context: PromptContent** [Link](https://semaphore.io/blog/domain-driven-design-microservices)
+### **Bounded Context: PromptContent** 
 
 **Subdominio Core**:
 - **Content Generation**: Creación automática de contenido con IA
@@ -346,7 +342,7 @@ Anonimización de datos
 - Meta Business Suite
 - Storage (S3, Azure Blob Storage)
 
-### **Bounded Context: PromptAds** [Link](https://learn.microsoft.com/en-us/azure/architecture/microservices/model/domain-analysis)
+### **Bounded Context: PromptAds** 
 
 **Subdominio Core**:
 - **Campaign Management**: Diseño, segmentación y ejecución de campañas
@@ -379,8 +375,7 @@ Anonimización de datos
 - Mailchimp API
 - LinkedIn Campaign Manager API
 
-### **Bounded Context: PromptCrm** [Link](https://semaphore.io/blog/domain-driven-design-microservices)
-
+### **Bounded Context: PromptCrm** 
 **Subdominio Core**:
 - **Lead Management**: Captura, clasificación y seguimiento
 - **Customer Engagement**: Chatbots, voicebots, automation
@@ -413,7 +408,7 @@ Anonimización de datos
 - WhatsApp Business API
 - Twilio API (SMS, Voice)
 
-### **Bounded Context: PromptSales (Portal Unificado)** [Link](https://learn.microsoft.com/en-us/azure/architecture/microservices/model/domain-analysis)
+### **Bounded Context: PromptSales (Portal Unificado)** 
 **Subdominio Core**:
 - **Strategy Design**: Diseño de estrategias de mercadeo multicanal
 - **Orchestration**: Coordinación entre las 3 subempresas
@@ -445,7 +440,7 @@ Anonimización de datos
 ---
 ## Contratos entre Dominios mediante Interfaces
 
-### **Patrón: Domain Model Facade as API** [Link](https://eprints.cs.univie.ac.at/6948)
+### **Patrón: Domain Model Facade as API** 
 
 ​**1. Facade: ContentServiceFacade**
 
@@ -538,9 +533,9 @@ interface ScoredLeadDTO extends LeadDTO {
 }
 ```
 
-**4. API REST Contracts (OpenAPI)** [Link](https://www.microservice-api-patterns.org/ZIO-FromDDDToMAPIsQS2020v10p.pdf)
+**4. API REST Contracts (OpenAPI)** 
 
-​Todos los facades se exponen también como APIs REST siguiendo el patrón **Aggregate Roots as API Endpoints**:[Link](https://eprints.cs.univie.ac.at/6948)
+​Todos los facades se exponen también como APIs REST siguiendo el patrón **Aggregate Roots as API Endpoints**:
 
 text
 ```
@@ -564,9 +559,9 @@ text
 
 <img width="811" height="791" alt="image" src="https://github.com/user-attachments/assets/fbf91f9e-3677-41ce-b5b9-0521937dfd4e" />
 
-El sistema se estructura en capas con los siguientes bounded contexts:[link](https://martinfowler.com/bliki/BoundedContext.html)
+El sistema se estructura en capas con los siguientes bounded contexts:
 
-**Relaciones entre Bounded Contexts**:[Link](https://www.infoq.com/articles/ddd-contextmapping/)
+**Relaciones entre Bounded Contexts**:
 
 1. **PromptSales → PromptContent**: Customer/Supplier (Open Host Service)
 2. **PromptSales → PromptAds**: Customer/Supplier (Open Host Service)
@@ -575,7 +570,7 @@ El sistema se estructura en capas con los siguientes bounded contexts:[link](htt
 5. **Todos → External Systems**: Anti-Corruption Layer (ACL)
 ## Independencia entre Dominios
 
-**Principios de Independencia**:[](https://blog.bitsrc.io/developing-a-ddd-oriented-microservices-1b65bd45e2a8)
+**Principios de Independencia**:
 
 1. **Desacoplamiento de Datos**: Cada bounded context tiene su propia base de datos
 2. **Comunicación Asíncrona**: Event-driven con NATS/Kafka para operaciones no críticas
@@ -583,7 +578,7 @@ El sistema se estructura en capas con los siguientes bounded contexts:[link](htt
 4. **Versionado**: Cada API mantiene versiones independientes
 5. **Deployment**: Cada bounded context se despliega independientemente en Kubernetes
 
-**Pruebas por Dominio**:[Link](https://blog.bitsrc.io/developing-a-ddd-oriented-microservices-1b65bd45e2a8)
+**Pruebas por Dominio**:
 
 1. **Unit Tests**: Lógica de dominio pura (sin dependencias externas)
 2. **Integration Tests**: Facades y repositories con bases de datos de test
