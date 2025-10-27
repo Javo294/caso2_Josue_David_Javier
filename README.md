@@ -283,49 +283,36 @@ Anonimización de datos
 
 ## Identificación de Dominios Principales
 
-### **Dominios Globales (Compartidos)**:
-1. **Identity & Access Management (IAM)**
-    - Autenticación de usuarios
-    - Autorización y permisos
-    - Gestión de roles
-    - Audit logs de seguridad
-    - **Entidades**: User, Role, Permission, Session, AuditLog
-        
-2. **Billing & Subscriptions**    
-    - Gestión de planes y tiers
-    - Facturación y pagos 
-    - Tracking de uso 
-    - **Entidades**: Subscription, Plan, Invoice, Payment, UsageMetric        
-3. **Notifications**
-    - Email, SMS, push notifications
-    - Alertas del sistema
-    - **Entidades**: Notification, NotificationTemplate, NotificationLog
-        
-4. **Analytics & Reporting**
-    - Dashboards centralizados
-    - Métricas consolidadas de las 3 subempresas
-    - Data warehouse
-    - **Entidades**: Report, Dashboard, Metric, DataPipeline
+### PromptContent Domains
 
-### **Bounded Context: PromptContent** 
+**Content Domain:** (`ContentManagementService`) Gestión central de contenido y sus propiedades
+- `ContentContract` - createContent(), updateContent(), getContent(), deleteContent()
 
-**Subdominio Core**:
-- **Content Generation**: Creación automática de contenido con IA
-- **Content Management**: Versionado, aprobaciones, derechos de uso
+**AI Domain:** (`AIContentGenerationService`) Integración y gestión de servicios de IA
+- `AIContentContract` - generateText(), generateImage(), optimizeContent()
 
-**Entidades y Agregados**:
-- **Content Aggregate Root**: Content
-    - ContentId (Value Object)
-    - ContentType (enum: text, image, video)
-    - Status (enum: draft, review, approved, published)
-    - Versions (Collection)
-    - ApprovalWorkflow
-    - AIGenerationMetadata
-        
-- **Campaign Content** (Entity)
-- **Content Template** (Entity)
-- **Media Asset** (Entity con storage reference)
-- **AI Prompt** (Value Object)
+**Template Domain:** (`TemplateManagementService`) Plantillas y estructuras reutilizables
+- `TemplateContract` - createTemplate(), applyTemplate(), cloneTemplate()
+
+**Media Domain:** (`MediaAssetService`) Gestión de assets multimedia
+- `MediaContract` - uploadMedia(), resizeMedia(), getMediaMetadata()
+
+**Approval Domain:** (`ContentApprovalService`) Flujos de revisión y aprobación
+- `ApprovalContract` - submitForApproval(), approveContent(), rejectContent()
+
+**Versioning Domain:** (`ContentVersioningService`) Control de versiones e historial
+- `VersioningContract` - createVersion(), rollbackVersion(), getVersionHistory()
+
+**Rights Domain:** (`RightsManagementService`) Gestión de derechos de uso y licencias
+- `RightsContract` - validateRights(), assignLicense(), checkPermissions()
+
+**Channel Domain:** (`ChannelAdaptationService`) Adaptación de contenido por canal
+- `ChannelContract` - adaptForChannel(), validateChannelFormat()
+
+### PromptAds Domains
+
+**Campaign Domain:** (`CampaignManagementService`) Gestión central de campañas
+- `CampaignContract` - createCampaign(), pauseCampaign(), updateCampaign()
 
 **Domain Services**:
 - `ContentGenerationService`: Integración con OpenAI API, Adobe, Canva
@@ -357,83 +344,101 @@ Anonimización de datos
 - **Audience Segment** (Entity)
 - **Budget Allocation** (Entity)
 - **Performance Report** (Entity)
+**Audience Domain:** (`AudienceTargetingService`) Segmentación y gestión de públicos
+- `AudienceContract` - segmentAudience(), updateSegments(), analyzeAudience()
 
-**Domain Services**:
-- `CampaignExecutionService`: Publicación en plataformas
-- `AudienceTargetingService`: Segmentación con IA
-- `BudgetOptimizationService`: Ajuste automático de presupuesto
-- `PerformanceAnalyticsService`: Análisis en tiempo real
+**AI Domain:** (`AIOptimizationAdsService`) Integración y gestión de servicios de IA
+- `AIOptimizationAdsContract` - predictPerformance(), optimizeBidding(), generateInsights()
 
-**Integraciones Externas**:
-- Google Ads API
-- Meta Ads API
-- TikTok for Business API
-- Mailchimp API
-- LinkedIn Campaign Manager API
+**Budget Domain:** (BudgetService) Gestión y optimización de presupuestos
+- `BudgetContract` - allocateBudget(), adjustBudget(), trackSpend()
 
-### **Bounded Context: PromptCrm** 
-**Subdominio Core**:
-- **Lead Management**: Captura, clasificación y seguimiento
-- **Customer Engagement**: Chatbots, voicebots, automation
+**Creative Domain:** (`CreativeManagementService`) Gestión de creatividades publicitarias
+- `CreativeContract` - createAdCreative(), testCreative(), optimizeCreative()
 
-**Entidades y Agregados**:
-- **Lead Aggregate Root**: Lead
-    - LeadId (Value Object)
-    - ContactInfo (Value Object)
-    - Source (enum: website, social, referral)
-    - Score (Value Object: calculado con IA)
-    - Status (enum: new, qualified, nurturing, converted)
-    - InteractionHistory (Collection)
-    - PurchaseIntent (Value Object)
+**Performance Domain:** (`PerformanceAnalyticsService`) Análisis y métricas de rendimiento
+- `PerformanceContract` - trackMetrics(), generateReport(), calculateROI()
 
-- **Customer** (Entity)
-- **Interaction** (Entity: email, call, chat, meeting)
-- **Deal** (Entity)
-- **Conversation** (Entity: chatbot/voicebot)
+**Channel Domain:** (`MultiChannelService`) Gestión multi-canal
+- `ChannelManagementContract` - deployToChannels(), syncChannels(), channelAnalytics()
 
-**Domain Services**:
-- `LeadScoringService`: Predicción de intención con IA
-- `ConversationService`: Chatbot/voicebot automation
-- `LeadNurturingService`: Flujos automatizados
-- `IntegrationSyncService`: Sincronización con CRMs externos
+**Optimization Domain:** (`CampaignOptimizationService`) Optimización automática de campañas
+- `OptimizationContract` - autoOptimize(), aBTesting(), applyOptimizations()
 
-**Integraciones Externas**:
-- HubSpot API
-- Salesforce API
-- Zendesk API
-- WhatsApp Business API
-- Twilio API (SMS, Voice)
+**Payment Domain:** (`AdPaymentService`) Gestión de pagos y facturación
+- `PaymentContract` - processPayment(), generateInvoice(), handleRefunds()
 
-### **Bounded Context: PromptSales (Portal Unificado)** 
-**Subdominio Core**:
-- **Strategy Design**: Diseño de estrategias de mercadeo multicanal
-- **Orchestration**: Coordinación entre las 3 subempresas
-- **Consolidated Analytics**: Reportería unificada
+**Reaction Domain:** (`EngagementTrackingService`) Gestión de reacciones y engagement
+- `ReactionContract` - trackEngagement(), analyzeSentiment(), responseManagement()
 
-**Entidades y Agregados**:
-- **Marketing Strategy Aggregate Root**: MarketingStrategy
-    - StrategyId (Value Object)
-    - Client (Value Object)
-    - Objectives (Collection)
-    - Timeline (Value Object)
-    - Budget (Value Object)
-    - ContentPlan (referencia a PromptContent)
-    - CampaignPlan (referencia a PromptAds)
-    - LeadFlows (referencia a PromptCrm)
-    - ApprovalStatus
-        
-- **Client** (Entity)
-- **Objective** (Value Object: KPI, target, deadline)
-- **Task Schedule** (Entity: agenda inteligente)
-- **Consolidated Report** (Entity)
+### PromptCrm Domains
 
-**Domain Services**:
-- `StrategyOrchestrationService`: Coordinación entre bounded contexts
-- `AIRecommendationService`: Sugerencias automáticas
-- `ConsolidatedAnalyticsService`: Agregación de métricas
-- `ApprovalWorkflowService`: Revisión y aprobación
+**AI Domain:** (`AICustomerService`) Integración y gestión de servicios de IA
+- `AICRMContract` - predictBehavior(), automateResponses(), sentimentAnalysis()
 
----
+**Lead Domain:** (`LeadManagementService`) Gestión central de leads
+- `LeadContract` - captureLead(), qualifyLead(), nurtureLead()
+
+**Customer Domain:** (`CustomerManagementService`) Gestión de clientes
+- `CustomerContract` - createCustomer(), updateProfile(), customerHistory()
+
+**Interaction Domain:** (`InteractionTrackingService`) Historial de interacciones
+- `InteractionContract` - logInteraction(), getTimeline(), interactionAnalytics()
+
+**Scoring Domain:** (`LeadScoringService`) Scoring y clasificación
+- `ScoringContract` - calculateScore(), updateScoringModel(), prioritizeLeads()
+
+**Automation Domain:** (`WorkflowAutomationService`) Flujos automatizados
+- `AutomationContract` - triggerWorkflow(), configureAutomation(), pauseWorkflow()
+
+**Deal Domain:** (`DealManagementService`) Gestión de oportunidades
+- `DealContract` - createDeal(), updatePipeline(), forecastRevenue()
+
+**Conversation Domain:** (`ConversationService`) Chatbots y voicebots
+- `ConversationContract` - handleMessage(), escalateToHuman(), botTraining()
+
+**Integration Domain:** (`CRMIntegrationService`) Sincronización con CRMs externos
+- `IntegrationContract` - syncData(), mapFields(), handleWebhooks()
+
+**Marketing Domain:** (`MarketingService`) Gestión de marketing
+- `MarketingContract` - createCampaign(), trackConversions(), leadScoring()
+
+**Payment Domain:** (`CRMPaymentService`) Gestión de pagos CRM
+- `CRMPaymentContract` - processSubscription(), handleBilling(), paymentHistory()
+
+
+### PromptSales (Portal Unificado) Domains
+
+**Strategy Domain:** (`StrategyDesignService`) Diseño y gestión de estrategias
+- `StrategyContract` - createStrategy(), validateStrategy(), updateStrategy()
+
+**Orchestration Domain:** (`CrossContextOrchestrationService`) Coordinación entre bounded contexts
+- `OrchestrationContract` - coordinateWorkflows(), syncData(), handleEvents()
+
+**Client Domain:** (`ClientManagementService`) Gestión de clientes y sus datos
+- `ClientContract` - onboardClient(), updateClientData(), clientReporting()
+
+**Analytics Domain:** (`ConsolidatedAnalyticsService`) Analítica consolidada
+- `AnalyticsContract` - aggregateMetrics(), generateInsights(), predictiveAnalytics()
+
+**Workflow Domain:** (`WorkflowManagementService`) Gestión de flujos de trabajo
+- `WorkflowContract` - createWorkflow(), assignTasks(), trackProgress()
+
+**Recommendation Domain:** (`AIRecommendationService`) Recomendaciones de IA
+- `RecommendationContract` - generateRecommendations(), optimizeSuggestions(), learnFromFeedback()
+
+**Scheduling Domain:** (`IntelligentSchedulingService`) Agenda y calendario inteligente
+- `SchedulingContract` - scheduleCampaign(), optimizeTimeline(), handleConflicts()
+
+**Approval Domain:** (`UnifiedApprovalService`) Flujos de aprobación unificados
+- `ApprovalContract` - submitForApproval(), approvalWorkflow(), trackApprovals()
+
+**Services Domain:** (`ServiceCatalogService`) Gestión de servicios y productos
+- `ServiceContract` - manageServices(), bundleProducts(), serviceAnalytics()
+
+**User Domain:** (`UserManagementService`) Gestión de usuarios y permisos
+- `UserContract` - createUser(), assignRoles(), managePermissions()
+
 ## Contratos entre Dominios mediante Interfaces
 
 ### **Patrón: Domain Model Facade as API** 
@@ -576,8 +581,5 @@ El sistema se estructura en capas con los siguientes bounded contexts:
 
 **Pruebas por Dominio**:
 
-1. **Unit Tests**: Lógica de dominio pura (sin dependencias externas)
-2. **Integration Tests**: Facades y repositories con bases de datos de test
-3. **Contract Tests**: Validación de contratos entre bounded contexts (Pact)
-4. **E2E Tests**: Flujos completos que cruzan múltiples dominios
-
+**Unit Tests**: Lógica de dominio pura (sin dependencias externas)
+**Integration Tests**: Facades y repositories con bases de datos de test
