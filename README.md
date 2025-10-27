@@ -103,7 +103,6 @@ resources:
 - Email digest para métricas diarias
 
 ### Availability
-**Justificación metodológica**: El cálculo de disponibilidad se basa en la fórmula estándar: `Availability% = (Uptime / Total Time) × 100`
 **Disponibilidad Mínima**: 99.9% mensual
 
 **Downtime permitido**:
@@ -115,7 +114,7 @@ resources:
 **Configuración de Alta Disponibilidad**:
 
 **1. Load Balancing**
-- **Tecnología**: AWS Application Load Balancer (ALB) 
+- **Tecnología**: Azure 
 - **Configuración**:
     - Health checks cada 10 segundos
     - Unhealthy threshold: 3 fallos consecutivos
@@ -337,7 +336,7 @@ Anonimización de datos
 - OpenAI API, Anthropic API
 - Canva API, Adobe Creative Cloud API
 - Meta Business Suite
-- Storage (AWS)
+- Storage (Azure)
 
 ### **Bounded Context: PromptAds** 
 
