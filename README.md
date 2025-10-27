@@ -280,6 +280,8 @@ Anonimización de datos
 - **Versionado de APIs:** Soporte simultáneo de múltiples versiones
 
 # Domain driven desing
+<img width="1328" height="3258" alt="Diagrama en blanco - Página 1(1)" src="https://github.com/user-attachments/assets/fe5bcf6b-645c-4444-89ea-1c7f2991e418" />
+
 
 ## Identificación de Dominios Principales
 
