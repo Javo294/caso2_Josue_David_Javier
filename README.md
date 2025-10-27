@@ -280,6 +280,7 @@ Anonimización de datos
 - **Versionado de APIs:** Soporte simultáneo de múltiples versiones
 
 # Domain driven desing
+<img width="4198" height="1782" alt="Diagrama en blanco - Página 1" src="https://github.com/user-attachments/assets/e42d5ce4-fde2-4232-a774-2ebbc1d40967" />
 
 ## Identificación de Dominios Principales
 
@@ -525,10 +526,6 @@ text
 				400:        
 					$ref: '#/components/schemas/ValidationError'
 ```
-
-## Diagrama de Dominios
-
-<img width="811" height="791" alt="image" src="https://github.com/user-attachments/assets/fbf91f9e-3677-41ce-b5b9-0521937dfd4e" />
 
 El sistema se estructura en capas con los siguientes bounded contexts:
 
