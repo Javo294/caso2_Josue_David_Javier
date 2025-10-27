@@ -314,36 +314,6 @@ Anonimización de datos
 **Campaign Domain:** (`CampaignManagementService`) Gestión central de campañas
 - `CampaignContract` - createCampaign(), pauseCampaign(), updateCampaign()
 
-**Domain Services**:
-- `ContentGenerationService`: Integración con OpenAI API, Adobe, Canva
-- `ContentApprovalService`: Workflow de aprobación
-- `ContentVersioningService`: Control de versiones
-
-**Integraciones Externas**:
-- OpenAI API, Anthropic API
-- Canva API, Adobe Creative Cloud API
-- Meta Business Suite
-- Storage (Azure)
-
-### **Bounded Context: PromptAds** 
-
-**Subdominio Core**:
-- **Campaign Management**: Diseño, segmentación y ejecución de campañas
-- **Ad Performance**: Análisis en tiempo real
-
-**Entidades y Agregados**:
-- **Campaign Aggregate Root**: Campaign
-    - CampaignId (Value Object)
-    - TargetAudience (Value Object)
-    - Budget (Value Object: amount, currency, spend)
-    - Schedule (Value Object: start, end, timezone)
-    - Channels (Collection: Google Ads, Meta, TikTok, Email)
-    - PerformanceMetrics (Value Object)
-        
-- **Ad Creative** (Entity)
-- **Audience Segment** (Entity)
-- **Budget Allocation** (Entity)
-- **Performance Report** (Entity)
 **Audience Domain:** (`AudienceTargetingService`) Segmentación y gestión de públicos
 - `AudienceContract` - segmentAudience(), updateSegments(), analyzeAudience()
 
