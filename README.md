@@ -200,9 +200,9 @@ Seguimiento de issues con templates estandarizados. Etiquetado por tipo (bug, fe
 #### Soporte post desarrollo
 
 Niveles de Soporte
-- **L1:** Manuales de usuario y videos tutoriales para problemas comunes
-- **L2:** Soporte por email con tiempo máximo de respuesta de 48 horas
-- **L3:** Sistema de ticketing para issues técnicos con escalamiento al equipo de desarrollo
+- **L1:** Atiende dudas básicas y problemas comunes, sobre el uso de las plataformas. Se apoya en manuales y videos tutoriales. Si no se resuelve, se redirige al equipo de soporte técnico (L2).
+- **L2:** Atiende incidencias funcionales reportadas por usuarios vía correo electrónico, con tiempo máximo de respuesta de 48 horas. Si el problema requiere cambios técnicos o acceso al sistema, se escala al equipo de desarrollo (L3).
+- **L3:** Atiende issues técnicos complejos, errores del sistema o solicitudes de mantenimiento, gestionados mediante el sistema de tickets y resueltos directamente por el equipo de desarrollo.
 
 #### Arquitectura de Mantenibilidad
 
